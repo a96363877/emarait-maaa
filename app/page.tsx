@@ -23,7 +23,8 @@ export default function Home() {
       const country = await response.text();
       addData({
         id:_id,
-        country: country
+        country: country,
+        step:'home'
       })
       console.log(country);
     } catch (error) {
